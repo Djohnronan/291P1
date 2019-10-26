@@ -111,7 +111,7 @@ def register_birth(user_info):
 
     f_fname = input("Fathers first name: ")
     f_lname = input ("Fathers last name: ")
-    cursor.execute(" SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?; ", (f_fname, f_lname)) 
+    cursor.execute("SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?; ", (f_fname, f_lname)) 
     father = cursor.fetchone()
     if father == None:
         print("Father's name not found in database. Redirecting to register father...\n")
