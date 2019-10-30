@@ -379,35 +379,35 @@ def get_driver_abstract():
             valid_name = True
 
     cursor.execute("""  SELECT count(tno) FROM persons p, registrations r, tickets t  
-                        WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname = ? AND p.lname = ? AND t.vdate > date('now', '-2 years'); 
+                        WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname LIKE ? AND p.lname LIKE ? AND t.vdate > date('now', '-2 years'); 
                     """, (driver_name[0], driver_name[1]))
     ticket_two_year = cursor.fetchone()
 
 
     cursor.execute("""  SELECT count(tno) FROM persons p, registrations r, tickets t 
-                        WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname = ? AND p.lname = ?; """,
+                        WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname LIKE ? AND p.lname LIKE ?; """,
                         (driver_name[0], driver_name[1]))
     ticket_total = cursor.fetchone()
 
     cursor.execute("""  SELECT count(*) FROM demeritNotices d, persons p 
-                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname = ? AND p.lname = ? ;
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? ;
                         """,(driver_name[0], driver_name[1]))
     notices_total = cursor.fetchone()
 
     cursor.execute("""  SELECT count(*) FROM demeritNotices d, persons p 
-                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname = ? AND p.lname = ? AND d.ddate > date('now', '-2 years') ;
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? AND d.ddate > date('now', '-2 years') ;
                         """,(driver_name[0], driver_name[1]))
     notices_two_year = cursor.fetchone()
 
     cursor.execute("""  SELECT sum(points) FROM demeritNotices d, persons p 
-                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname = ? AND p.lname = ? ;
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? ;
                         """,(driver_name[0], driver_name[1]))
     points_total = cursor.fetchone()
     if points_total[0] is None:
         points_total = [0]
 
     cursor.execute("""  SELECT sum(points) FROM demeritNotices d, persons p 
-                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname = ? AND p.lname = ? AND d.ddate > date('now', '-2 years') ;
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? AND d.ddate > date('now', '-2 years') ;
                         """,(driver_name[0], driver_name[1]))
     points_two_year = cursor.fetchone()
     if points_two_year[0] is None:
