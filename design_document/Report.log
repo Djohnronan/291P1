@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  29 OCT 2019 03:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  29 OCT 2019 21:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -342,11 +342,11 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <10.95> not available
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
-<Diagram1.pdf, id=31, 614.79688pt x 795.47194pt>
+<Diagram1.pdf, id=31, 507.3354pt x 370.02242pt>
 File: Diagram1.pdf Graphic file (type pdf)
 <use Diagram1.pdf>
 Package pdftex.def Info: Diagram1.pdf  used on input line 43.
-(pdftex.def)             Requested size: 241.84843pt x 312.92743pt.
+(pdftex.def)             Requested size: 386.95897pt x 282.23624pt.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Diagram1.pdf>]
@@ -371,6 +371,9 @@ Package rerunfilecheck Info: File `Report.out' has not changed.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 66.
  )
 (\end occurred inside a group at level 1)
@@ -391,10 +394,10 @@ fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/te
 xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Report.pdf (2 pages, 73836 bytes).
+Output written on Report.pdf (2 pages, 98473 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
- 79 compressed objects within 1 object stream
+ 87 PDF objects out of 1000 (max. 8388607)
+ 73 compressed objects within 1 object stream
  16 named destinations out of 1000 (max. 500000)
  54 words of extra memory for PDF output out of 10000 (max. 10000000)
 
