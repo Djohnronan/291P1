@@ -140,6 +140,18 @@ insert into tickets values (407,804,4,'speeding','2016-01-20');
 insert into tickets values (409,804,2,'red light','2016-01-21');
 insert into tickets values (408,805,2,'red light','2012-02-29');
 
+insert into tickets values (1000,807,40,'illegal parking','2016-08-30');
+insert into tickets values (1001,807,400,'speeding on 112th st','2019-08-30');
+insert into tickets values (1002,807,23,'ran stop sign','2019-08-05');
+insert into tickets values (1003,807,98,'driving with a blindfold on','2016-08-10');
+insert into tickets values (1004,807,50,'Not buckled in','2018-10-30');
+insert into tickets values (1005,807,4,'Street racing','2013-12-30');
+insert into tickets values (1006,807,3,'Improperly secured load','2012-08-30');
+insert into tickets values (1007,807,2,'Failed to signal','2018-01-01');
+insert into tickets values (1008,807,90,'hit and run','2017-12-30');
+insert into tickets values (1009,807,4,'I dont know I just felt like issuing a ticket so here we are','2019-10-29');
+
+
 insert into demeritNotices values ('2018-07-20', 'Michael', 'Fox', 4, 'Speeding');
 insert into demeritNotices values ('2019-03-20', 'Michael', 'Fox', 12, 'Driving armor vehicles');
 insert into demeritNotices values ('2000-03-30', 'Michelle', 'Black', 4, 'Speeding');

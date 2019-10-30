@@ -451,7 +451,7 @@ def ticket_report(fname, lname, num):
     else:
         t = input("\nPress T to display more results, or ENTER to return to menu.\n")
         if t in ['T', 't']:
-            ticket_report(fname, lname, 10)
+            ticket_report(fname, lname, num + 5)
     connection.commit()
 
 def issue_ticket():
