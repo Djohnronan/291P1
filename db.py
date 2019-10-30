@@ -439,15 +439,16 @@ def ticket_report(fname, lname, num):
                         ORDER BY t.vdate DESC
                         LIMIT ?
                         """, (fname, lname, num))
-    ticket_report = [[str(item) for item in results] for results in cursor.fetchall()]
+    ticket_hist = [[str(item) for item in results] for results in cursor.fetchall()]
     print("{0:^13} {1:^17} {2:^30} {3:^5} {4:^11} {5:^9} {6:^13}".format('Ticket No.', 'Violation Date', 'Violation Description', 'Fine', 'Reg. No.', 'Make', 'Model'))
     print('-'*102)
-    results = len(ticket_report)
-    for item in ticket_report:
-        print("{0:^13} {1:^17} {2:^30} {3:^5} {4:^11} {5:^9} {6:^13}".format(item[0], item[1], item[2], item[3], item[4], item[5], item[6]))
+    results = len(ticket_hist)
+    for item in ticket_hist:
+        print("{0:^13} {1:^17} {2:^30.30} {3:^5} {4:^11} {5:^9} {6:^13}".format(item[0], item[1], item[2], item[3], item[4], item[5], item[6]))
 
     if results < num: 
-        input("\nPress ENTER to return to menu.\n")
+        print("\nEnd of ticket report.")
+        input("Press ENTER to return to menu.\n")
     else:
         t = input("\nPress T to display more results, or ENTER to return to menu.\n")
         if t in ['T', 't']:
