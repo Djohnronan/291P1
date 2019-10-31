@@ -142,10 +142,6 @@ def register_birth(user_info):
 
     connection.commit()
 
-	
-	
-		   
-    
 def register_marriage(user_info):
     global connection, cursor
 
@@ -369,11 +365,95 @@ def get_driver_abstract():
     global connection, cursor
 
     os.system('clear')
+    print("Driver Abstract\n")
 
-    fname = input("Enter first name: ")
-    lname = input("Enter last name: ")
-    
-    pass
+    valid_name = False
+    while not valid_name:
+        fname = input("Enter driver's first name: ")
+        lname = input("Enter driver's last name: ")
+        cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE?", (fname, lname))
+        driver_name = cursor.fetchone()
+        if driver_name is None:
+            print("Person not found in the database. Enter another name, or press ESC to exit")
+        else:
+            valid_name = True
+
+    cursor.execute("""  SELECT count(tno) FROM persons p, registrations r, tickets t  
+                        WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname LIKE ? AND p.lname LIKE ? AND t.vdate > date('now', '-2 years'); 
+                        """, (driver_name[0], driver_name[1]))
+    ticket_two_year = cursor.fetchone()
+
+
+    cursor.execute("""  SELECT count(tno) FROM persons p, registrations r, tickets t 
+                        WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname LIKE ? AND p.lname LIKE ?; 
+                        """, (driver_name[0], driver_name[1]))
+    ticket_total = cursor.fetchone()
+
+    cursor.execute("""  SELECT count(*) FROM demeritNotices d, persons p 
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? ;
+                        """, (driver_name[0], driver_name[1]))
+    notices_total = cursor.fetchone()
+
+    cursor.execute("""  SELECT count(*) FROM demeritNotices d, persons p 
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? AND d.ddate > date('now', '-2 years') ;
+                        """, (driver_name[0], driver_name[1]))
+    notices_two_year = cursor.fetchone()
+
+    cursor.execute("""  SELECT sum(points) FROM demeritNotices d, persons p 
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? ;
+                        """, (driver_name[0], driver_name[1]))
+    points_total = cursor.fetchone()
+    if points_total[0] is None:
+        points_total = [0]
+
+    cursor.execute("""  SELECT sum(points) FROM demeritNotices d, persons p 
+                        WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? AND d.ddate > date('now', '-2 years') ;
+                        """, (driver_name[0], driver_name[1]))
+    points_two_year = cursor.fetchone()
+    if points_two_year[0] is None:
+        points_two_year = [0]
+
+    os.system('clear')
+    print("Driver Abstract: {} {}\n".format(driver_name[0], driver_name[1]))
+    print("*** Ticket History ***\n")
+    print("{0:>5}{1}".format('', 'Lifetime: ' + str(ticket_total[0])))
+    print("{0:>5}{1}".format('', 'Past two years: ' + str(ticket_two_year[0])))
+    print("\n*** Demerits History ***\n") 
+    print("{0:>5}{1} {2}".format('', 'Lifetime: ' + str(notices_total[0]) + ' notices |', str(points_total[0]) + ' points'))    
+    print("{0:>5}{1} {2}".format('', 'Past two years: ' + str(notices_two_year[0]) + ' notices |', str(points_two_year[0]) + ' points'))     
+    t = input("\nTo view detailed ticket info, press T.\nTo return to menu, press ENTER.\n")
+
+    if t in ['T', 't']:
+        ticket_report(driver_name[0], driver_name[1], 5)
+    connection.commit()
+    return
+
+
+def ticket_report(fname, lname, num):
+    global connection, cursor
+    os.system('clear')
+
+    cursor.execute("""  SELECT t.tno, t.vdate, t.violation, t.fine, t.regno, v.make, v.model
+                        FROM persons p, tickets t, registrations r, vehicles v
+                        WHERE p.fname = r.fname AND p.lname = r.lname AND t.regno = r.regno AND r.vin = v.vin AND p.fname = ? and p.lname = ?
+                        ORDER BY t.vdate DESC
+                        LIMIT ?
+                        """, (fname, lname, num))
+    ticket_hist = [[str(item) for item in results] for results in cursor.fetchall()]
+    print("{0:^13} {1:^17} {2:^30} {3:^5} {4:^11} {5:^9} {6:^13}".format('Ticket No.', 'Violation Date', 'Violation Description', 'Fine', 'Reg. No.', 'Make', 'Model'))
+    print('-'*102)
+    results = len(ticket_hist)
+    for item in ticket_hist:
+        print("{0:^13} {1:^17} {2:^30.30} {3:^5} {4:^11} {5:^9} {6:^13}".format(item[0], item[1], item[2], item[3], item[4], item[5], item[6]))
+
+    if results < num: 
+        print("\nEnd of ticket report.")
+        input("Press ENTER to return to menu.\n")
+    else:
+        t = input("\nPress T to display more results, or ENTER to return to menu.\n")
+        if t in ['T', 't']:
+            ticket_report(fname, lname, num + 5)
+    connection.commit()
 
 def issue_ticket():
     global connection, cursor
@@ -478,6 +558,7 @@ def main():
                 exit()
             else:
                 os.system('clear')
+    
 
 
 if __name__ == "__main__":
