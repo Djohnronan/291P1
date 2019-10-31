@@ -3,6 +3,7 @@ import getpass
 import random
 import re
 import os
+import time
 
 connection = None
 cursor = None
@@ -204,12 +205,12 @@ def bill_of_sale():
     
     print("Process a bill of sale ")
    
-    vin =  input("\nenter  VIN: ")
-    cursor.execute("SELECT * FROM registrations WHERE vin = ? ;" , (vin,))
+    vin =  input("\nEnter  VIN: ")
+    cursor.execute("SELECT * FROM registrations WHERE vin LIKE ? ;" , (vin,))
     if not cursor.fetchone():
 
-        print("\nVIN doesn't exist or didn't entered!" )
-        print("\nTry aging (press 1)")
+        print("\nVIN doesn't exist" )
+        print("\nTry again (press 1)")
         print("exit (press 2)")
         print("main menu (press3)")
  
@@ -233,11 +234,12 @@ def bill_of_sale():
                         print("Number entered is not valid, Try again!")
                  
     current_owner_fname = input("enter current owner first name: ")
-    cursor.execute("SELECT fname FROM registrations WHERE fname =? ;",(current_owner_fname, ))
+    current_owner_lname = input("Enter current owner last name: ")
+    cursor.execute("SELECT fname FROM registrations WHERE fname LIKE ? AND lname LIKE ?;",(current_owner_fname, current_owner_lname))
     if not cursor.fetchone():
 
-        print("\nFirst Name doesn't exist or didn't entered!" )
-        print("\nTry aging (press 1)")
+        print("\nName doesn't exist or was entered incorrectly" )
+        print("\nTry again (press 1)")
         print("exit (press 2)")
         print("main menu (press3)")
  
@@ -260,43 +262,16 @@ def bill_of_sale():
                 else:
                         print("Number entered is not valid, Try again!")
 
-    current_owner_lname = input("enter current owner last name: ")
-    cursor.execute("SELECT lname FROM registrations WHERE lname =? ;" , (current_owner_lname, ))
-    if not cursor.fetchone():
-
-        print("\nLast Name doesn't exist or didn't entered!" )
-        print("\nTry aging (press 1)")
-        print("exit (press 2)")
-        print("main menu (press3)")
- 
-        valid = False
-        while (not valid):
-            try:
-                choice = int(input("\nEnter a number: "))
-            except: 
-                print("Please enter a valid option")
-            else:
-                if(choice in range(1,4)):  
-                    if(choice == 1):
-                        bill_of_sale()
-                    elif (choice == 2):
-                        exit()
-                    elif (choice == 3):
-                        main()
-                    elif (choice == None):
-                        return
-                else:
-                        print("Number entered is not valid, Try again!")
         
-    cursor.execute("SELECT * FROM registrations WHERE vin =? AND fname =? AND lname = ? AND expiry < date('now');",(vin,current_owner_fname,current_owner_lname))
+    cursor.execute("SELECT * FROM registrations WHERE vin LIKE ? AND fname LIKE ? AND lname LIKE ? AND expiry >= date('now');",(vin,current_owner_fname,current_owner_lname))
     reg_info = cursor.fetchone()
     if isinstance(reg_info, type(None)): 
-        print("\n",current_owner_fname," ",current_owner_lname, "is not the most recent owner")
+        print("\n",current_owner_fname + ' '+ current_owner_lname +  " is not the most recent owner")
 
        
-        print("\nTry aging (press 1)")
-        print("exit (press 2)")
-        print("main menu (press3)")
+        print("\nTry again (press 1)")
+        print("Exit (press 2)")
+        print("Main menu (press3)")
         valid = False
         while (not valid):
             try:
@@ -519,6 +494,7 @@ def insert_person(fname = None, lname = None):
 
     connection.commit()
 
+
 def main():
     global connection, cursor
     
@@ -534,32 +510,48 @@ def main():
                 os.system('clear')
                 print("Welcome " + user[3] + ".\n")
                 task = display_menu(user[2])
-                if task == 1:
-                    register_birth(user)
-                elif task == 2:
-                    register_marriage(user)
-                elif task == 3:
-                    renew_reg()
-                elif task == 4:
-                    bill_of_sale()
-                elif task == 5:
-                    process_payment()
-                elif task == 6:
-                    get_driver_abstract()
-                elif task == 7:
-                    issue_ticket()
-                elif task == 8:
-                    find_car_owner()
-                elif task == 0:
-                    logout = True
+                try:
+                    if task == 1:
+                        register_birth(user)
+                    elif task == 2:
+                        register_marriage(user)
+                    elif task == 3:
+                        renew_reg()
+                    elif task == 4:
+                        bill_of_sale()
+                    elif task == 5:
+                        process_payment()
+                    elif task == 6:
+                        get_driver_abstract()
+                    elif task == 7:
+                        issue_ticket()
+                    elif task == 8:
+                        find_car_owner()
+                    elif task == 0:
+                        logout = True
+                except(EOFError):
+                    print('\nReturning to menu...')
+                    time.sleep(2)
+                    continue
+                except:
+                    print('An error has occured... Disconnecting')
+                    dbconnection = False
+
         else:
-            ans = input("Unable to connect to the specified database. Would you like to try again? (Y for yes, N to exit) ")
-            if ans == 'N':
+            try:
+                ans = input("Unable to connect to the specified database. Would you like to try again? (Y for yes, N to exit) ")
+                if ans == 'N':
+                    exit()
+                else:
+                    os.system('clear')
+            except:
                 exit()
             else:
                 os.system('clear')
-    
+
 
 
 if __name__ == "__main__":
     main()
+
+
