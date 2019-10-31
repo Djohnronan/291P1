@@ -337,6 +337,18 @@ def process_payment():
     return
 
 def get_driver_abstract():
+    ''' Asks user for input of first and last name, and displays that persons driver abstract (providing person is found in the db).
+        If the person entered is not found, user has the option to renter the names, or return to the main user menu.
+        Driver abstract consists of: ticket counts for lifetime and last two years, demerit notices and points for lifetime and last two years. 
+        At the view, user is given option to see detailed ticket history, which calls ticket_report().
+
+        Args:
+            none
+        
+        Returns:
+            none
+            
+    '''
     global connection, cursor
 
     os.system('clear')
@@ -349,7 +361,7 @@ def get_driver_abstract():
         cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE?", (fname, lname))
         driver_name = cursor.fetchone()
         if driver_name is None:
-            print("Person not found in the database. Enter another name, or press ESC to exit")
+            print("Person not found in the database. Enter another name, or press ctrl-D to exit")
         else:
             valid_name = True
 
@@ -357,7 +369,6 @@ def get_driver_abstract():
                         WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname LIKE ? AND p.lname LIKE ? AND t.vdate > date('now', '-2 years'); 
                         """, (driver_name[0], driver_name[1]))
     ticket_two_year = cursor.fetchone()
-
 
     cursor.execute("""  SELECT count(tno) FROM persons p, registrations r, tickets t 
                         WHERE p.fname = r.fname AND p.lname = r.lname AND r.regno = t.regno AND p.fname LIKE ? AND p.lname LIKE ?; 
@@ -378,14 +389,14 @@ def get_driver_abstract():
                         WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? ;
                         """, (driver_name[0], driver_name[1]))
     points_total = cursor.fetchone()
-    if points_total[0] is None:
+    if points_total[0] is None: # if query returns null from summing 0, overwrite tuple so terminal displays 0 instead of None 
         points_total = [0]
 
     cursor.execute("""  SELECT sum(points) FROM demeritNotices d, persons p 
                         WHERE p.fname = d.fname AND p.lname = d.lname AND p.fname LIKE ? AND p.lname LIKE ? AND d.ddate > date('now', '-2 years') ;
                         """, (driver_name[0], driver_name[1]))
     points_two_year = cursor.fetchone()
-    if points_two_year[0] is None:
+    if points_two_year[0] is None: # if query returns null from summing 0, overwrite tuple so terminal displays 0 instead of None 
         points_two_year = [0]
 
     os.system('clear')
@@ -399,12 +410,23 @@ def get_driver_abstract():
     t = input("\nTo view detailed ticket info, press T.\nTo return to menu, press ENTER.\n")
 
     if t in ['T', 't']:
-        ticket_report(driver_name[0], driver_name[1], 5)
+        ticket_report(driver_name[0], driver_name[1], 5) # if user enters t or T, display the ticket report for the 5 most recent tickets
     connection.commit()
     return
 
 
 def ticket_report(fname, lname, num):
+    ''' Displays ticket details of driver mathcing fname, lname. Tickets are ordered from most recent to oldest.
+        Function wil display amount of tickets specified by arg num/
+
+        Args:
+            fname (str): First name of driver
+            lname (str): Last name of driver
+            num (int): number of tickets to be displayed
+
+        Returns:
+            none
+    '''
     global connection, cursor
     os.system('clear')
 
@@ -421,14 +443,15 @@ def ticket_report(fname, lname, num):
     for item in ticket_hist:
         print("{0:^13} {1:^17} {2:^30.30} {3:^5} {4:^11} {5:^9} {6:^13}".format(item[0], item[1], item[2], item[3], item[4], item[5], item[6]))
 
-    if results < num: 
+    if results < num: # if there are fewer results than specified withj input arg num, there are no more tickets to display
         print("\nEnd of ticket report.")
         input("Press ENTER to return to menu.\n")
-    else:
+    else: # otherwise there are more results, and user can have option to display 5 more 
         t = input("\nPress T to display more results, or ENTER to return to menu.\n")
         if t in ['T', 't']:
             ticket_report(fname, lname, num + 5)
     connection.commit()
+    return
 
 def issue_ticket():
     global connection, cursor
@@ -551,5 +574,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
