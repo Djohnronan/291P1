@@ -97,35 +97,44 @@ def register_birth(user_info):
     os.system('clear')
     print("Birth registry")
 
-    valid = False
-    while(not valid):
-        reg_no = unique_registration()
-        cursor.execute("SELECT * FROM births WHERE regno = ?", (reg_no, ))
-        if (not cursor.fetchone()): # check if any other births have the same reg_no
-            valid = True
+    cursor.execute("SELECT max(regno) FROM births;")
+    regno = cursor.fetchone()
+    regno = regno[0]
+    regno += 1
 
     fname = input("First name: ") 
     lname = input("Last name: ")
     regplace = user_info[5]
     gender = input("Gender: ")
 
-    m_fname = input("Mothers first name: ")
-    m_lname = input("Mothers last name: ")
-    cursor.execute(" SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?; ", (m_fname, m_lname)) 
-    mother = cursor.fetchone()
-    if mother == None:
-        print("Mother's name not found in database. Redirecting to register mother...\n")
-        insert_person(m_fname, m_lname)
+    valid = False
+    while not valid:
+        m_fname = input("Mothers first name: ")
+        m_lname = input("Mothers last name: ")
+        cursor.execute(" SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?; ", (m_fname, m_lname)) 
+        mother = cursor.fetchone()
+        if mother == None:
+            reg = input("{} {} was not found in the database.\nEnter 'R' to register them first, or enter any key to enter a new name: ".format(m_fname, m_lname))
+            if reg in ['r','R']:
+                insert_person(m_fname, m_lname)
+                valid = True 
+        else:
+            valid = True
 
 
-
-    f_fname = input("Fathers first name: ")
-    f_lname = input ("Fathers last name: ")
-    cursor.execute("SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?; ", (f_fname, f_lname)) 
-    father = cursor.fetchone()
-    if father == None:
-        print("Father's name not found in database. Redirecting to register father...\n")
-        insert_person(f_fname, f_lname)
+    valid = False
+    while not valid:
+        f_fname = input("Fathers first name: ")
+        f_lname = input ("Fathers last name: ")
+        cursor.execute(" SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?; ", (f_fname, f_lname)) 
+        father = cursor.fetchone()
+        if father == None:
+            reg = input("{} {} was not found in the database.\nEnter 'R' to register them first, or enter any key to enter a new name: ".format(f_fname, f_lname))
+            if reg in ['r','R']:
+                insert_person(f_fname, f_lname)
+                valid = True 
+        else:
+            valid = True
     
     cursor.execute("SELECT address, phone FROM persons WHERE fname LIKE ? AND lname LIKE ?", (m_fname, m_lname))
     mothers_info = cursor.fetchone()
@@ -138,7 +147,7 @@ def register_birth(user_info):
 
     cursor.execute("INSERT INTO persons VALUES (?, ?, ?, ? ,?, ?); ", data_person)
 
-    data_birth = (reg_no, fname, lname, regplace, gender, f_fname, f_lname, m_fname, m_lname)
+    data_birth = (regno, fname, lname, regplace, gender, f_fname, f_lname, m_fname, m_lname)
     cursor.execute("INSERT INTO births VALUES (?, ?, ?, date('now'), ?, ?, ?, ?, ?, ? ); ", data_birth)
 
     connection.commit()
@@ -147,32 +156,43 @@ def register_marriage(user_info):
     global connection, cursor
 
     os.system('clear')
-    print("\n Marriage registration.\n")
+    print("Marriage registration.\n")
+    cursor.execute("SELECT max(regno) FROM marriages;")
+    regno = cursor.fetchone()
+    regno  = regno[0]
+    regno += 1
     valid = False
-    while(not valid):
-        reg_no = unique_registration()
-        cursor.execute("SELECT * FROM births WHERE regno = ?", (reg_no, ))
-        if not cursor.fetchone(): # check if any other births have the same reg_no
+    while not valid:
+        p1_fname = input("p1 First name: ")
+        p1_lname = input("p1 Last name: ")
+        cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE ?;", (p1_fname, p1_lname))
+        p1_info = cursor.fetchone()
+        if p1_info == None:
+            reg = input("{} {} was not found in database.\nEnter 'R' to register them first, or enter any key to enter a new name: ".format(p1_fname, p1_lname))
+            if reg in ['r','R']:
+                insert_person(p1_fname, p1_lname)
+                valid = True 
+        else:
             valid = True
-    p1_fname = input("p1 First name: ")
-    p1_lname = input("p1 Last name: ")
-    cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE?", (p1_fname, p1_lname))
-    p1_info = cursor.fetchone()
-    if p1_info == None:
-	    print("Person not found in databse. Redirecting to register...")
-	    insert_person(p1_fname, p1_lname)
-	
-    p2_fname = input("p2 First name: ")
-    p2_lname = input("p2 Last name: ")
-    cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE?", (p2_fname, p2_lname))
-    p2_info = cursor.fetchone()
-    if p2_info == None:
-	    print("Person not found in databse. Redirecting to register...")
-	    insert_person(p2_fname, p2_lname)
+
+    valid = False
+    while not valid:
+        p2_fname = input("p2 First name: ")
+        p2_lname = input("p2 Last name: ")
+        cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE ?;", (p2_fname, p2_lname))
+        p2_info = cursor.fetchone()
+        if p2_info == None:
+            reg = input("{} {} was not found in databse. Enter 'R' to register them first, or enter any key to enter a new name: ".format(p2_fname, p2_lname))
+            if reg in ['r','R']:
+                insert_person(p2_fname, p2_lname)
+                valid = True 
+        else:
+            valid = True
+
     regplace = user_info[5]
-    data = (reg_no, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
+    data = (regno, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
 	
-    cursor.execute("INSERT INTO marriages VALUES (?, date('now'), ?, ?, ?, ?, ?); ", data)
+    cursor.execute("INSERT INTO marriages VALUES (?, date('now'), ?, ?, ?, ?, ?);", data)
     connection.commit()
 	
 def renew_reg():
@@ -466,7 +486,10 @@ def issue_ticket():
     date = input("Enter date of violation: ")
     desc = input("Enter violation description: ")
     amount = input("Enter fine amount: ")
-    tno = unique_registration()
+    cursor.execute("SELECT max(tno) FROM tickets;")
+    tno = cursor.fetchone()
+    tno = tno[0]
+    tno += 1
 
     if (date == ''):
         data = (tno, reg_no, amount, desc)
@@ -537,9 +560,6 @@ def find_car_owner():
     input("Press any button to return to menu")
     return
 
-def unique_registration():
-	return random.randint(0,9999)
-
 def insert_person(fname = None, lname = None):
     print("Registering a person")
 
@@ -572,6 +592,7 @@ def insert_person(fname = None, lname = None):
         print(fname + ' ' + lname + ' successfuly registered.\n')
 
     connection.commit()
+    return
 
 
 def main():
@@ -610,12 +631,12 @@ def main():
                         logout = True
                 except(EOFError):
                     print('\nReturning to menu...')
-                    time.sleep(2)
+                    time.sleep(1)
                     continue
                 except:
                     print('An error has occured... Disconnecting')
-                    logout = True
-
+                    time.sleep(1)
+                    dbconnection = False
 
         else:
             try:

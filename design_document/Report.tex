@@ -49,7 +49,16 @@ Depending in the user type (agent or officer), numerical options will appear on 
 \newpage
 \section{Software Design}\label{SD}
 \begin{itemize}
+
+\item User Menu
+	\begin{quotation}
+	\noindent After a successful log in, the user is provided a menu with numbered options. 
+	\end{quotation}
+
 \item Register a birth
+	\begin{quotation}
+	\noindent Registers a new person into \emph{persons} table and a new birth record in \emph{births} table. Prompts user to enter child's first and last name, birth gender, mother's first and last name, father's first and last name, and the child's birth date and birth place. Registration place is automatically set to the user's city, and registration date is set to today's date. Child inherits mother's address and phone number. In the case where the mother or father do not exist in the database, the user has the option to register them, then continue wuth the birth registration. 
+	\end{quotation}
 \item Register a marriage
 \item Renew a vehicle registration
 \item Process a bill of sale
@@ -57,7 +66,7 @@ Depending in the user type (agent or officer), numerical options will appear on 
 
 \item Get a driver abstract
 	\begin{quotation}
-	\noindent\emph{Promts user to enter first and last name of a registered person to display their driver abstract. If the name entered is not found, the user has the option to renter the name, or return to the main menu. The driver abstract consists of: ticket counts for lifetime and last two years, demerit notices and points for lifetime and last two years. The agent has the option to view a detailed ticket history by entereing the t/T key. Initially five tickets are displayed in order from most recent to oldest, with an option to display 5 more until the end of the history.}
+	\noindent Promts user to enter first and last name of a registered person to display their driver abstract. If the name entered is not found, the user has the option to renter the name, or return to the main menu. The driver abstract consists of: ticket counts for lifetime and last two years, demerit notices and points for lifetime and last two years. The agent has the option to view a detailed ticket history by entering the t/T key. Initially five tickets are displayed in order from most recent to oldest, with an option to display 5 more until the end of the history.
 	\end{quotation}
 
 \item Issue a ticket
