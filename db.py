@@ -97,7 +97,7 @@ def register_birth(user_info):
     os.system('clear')
     print("Birth registry")
 
-    cursor.execute("SELECT max(regno) FROM births;")
+    cursor.execute("SELECT MAX(regno) FROM births;")
     regno = cursor.fetchone()
     regno = regno[0]
     regno += 1
@@ -225,101 +225,47 @@ def bill_of_sale():
     
     print("Process a bill of sale ")
    
-    vin =  input("\nEnter  VIN: ")
-    cursor.execute("SELECT * FROM registrations WHERE vin LIKE ? ;" , (vin,))
-    if not cursor.fetchone():
+    valid = False
+    while (not valid):
+        vin =  input("\nEnter  VIN: ")
+        cursor.execute("SELECT * FROM registrations WHERE vin LIKE ? ;" , (vin,))
+        if not cursor.fetchone():
+            print("VIN doesn't exist. Please enter a new VIN or CTRL-d to exit" )
+        else:
+            valid = True
 
-        print("\nVIN doesn't exist" )
-        print("\nTry again (press 1)")
-        print("exit (press 2)")
-        print("main menu (press3)")
- 
-        valid = False
-        while (not valid):
-            try:
-                choice = int(input("\nEnter a number: "))
-            except ValueError: 
-                print("Please enter a valid option")
-            else:
-                if(choice in range(1,4)):  
-                    if(choice == 1):
-                        bill_of_sale()
-                    elif (choice == 2):
-                        exit()
-                    elif (choice == 3):
-                        main()
-                    elif (choice == None):
-                        return
-                else:
-                        print("Number entered is not valid, Try again!")
-                 
-    current_owner_fname = input("enter current owner first name: ")
-    current_owner_lname = input("Enter current owner last name: ")
-    cursor.execute("SELECT fname FROM registrations WHERE fname LIKE ? AND lname LIKE ?;",(current_owner_fname, current_owner_lname))
-    if not cursor.fetchone():
-
-        print("\nName doesn't exist or was entered incorrectly" )
-        print("\nTry again (press 1)")
-        print("exit (press 2)")
-        print("main menu (press3)")
- 
-        valid = False
-        while (not valid):
-            try:
-                choice = int(input("\nEnter a number: "))
-            except ValueError: 
-                print("Please enter a valid option")
-            else:
-                if(choice in range(1,4)):  
-                    if(choice == 1):
-                        bill_of_sale()
-                    elif (choice == 2):
-                        exit()
-                    elif (choice == 3):
-                        main()
-                    elif (choice == None):
-                        return
-                else:
-                        print("Number entered is not valid, Try again!")
-
-        
-    cursor.execute("SELECT * FROM registrations WHERE vin LIKE ? AND fname LIKE ? AND lname LIKE ? AND expiry >= date('now');",(vin,current_owner_fname,current_owner_lname))
-    reg_info = cursor.fetchone()
-    if isinstance(reg_info, type(None)): 
-        print("\n",current_owner_fname + ' '+ current_owner_lname +  " is not the most recent owner")
-
-       
-        print("\nTry again (press 1)")
-        print("Exit (press 2)")
-        print("Main menu (press3)")
-        valid = False
-        while (not valid):
-            try:
-                choice = int(input("\nEnter a number: "))
-            except ValueError: 
-                print("Please enter a valid option")
-            else:
-                if(choice in range(1,4)):  
-                    if(choice == 1):
-                        bill_of_sale()
-                    elif (choice == 2):
-                        exit()
-                    elif (choice == 3):
-                        main()
-                    elif (choice == None):
-                        return
-                else:
-                        print("Number entered is not valid, Try again!")
+    valid = False
+    while (not valid):
+        current_owner_fname = input("\nEnter current owner first name: ")
+        current_owner_lname = input("Enter current owner last name: ")
+        cursor.execute("SELECT * FROM registrations WHERE vin LIKE ? AND fname LIKE ? AND lname LIKE ? AND expiry >= date('now');",(vin,current_owner_fname,current_owner_lname))
+        reg_info = cursor.fetchone()
+        if reg_info == None:
+            print("{} {} is not the most recent owner, or does not exist. Please enter a new name or CTRL-d to exit".format(current_owner_fname, current_owner_lname))
+        else:
+            valid = True
      
-    new_owner_fname = input("enter new owner first name: ")
-    new_owner_lname = input("enter new owner last name: ")
-    new_plate = input("enter new plate number: ")
+    valid = False
+    while (not valid):
+        new_owner_fname = input("\nEnter new owner first name: ")
+        new_owner_lname = input("Enter new owner last name: ")
+        cursor.execute("SELECT * FROM persons WHERE fname LIKE ? and lname LIKE ?;", (new_owner_fname, new_owner_lname))
+        if not cursor.fetchone():
+            print("{} {} Does not exist. Please enter a new name or CTRL-d to exit".format(new_owner_fname, new_owner_lname))
+        else:
+            valid = True
+
+    new_plate = input("Enter new plate number: ")
         
-    new_reg_nu = unique_registration()
+    cursor.execute("SELECT MAX(regno) FROM registrations") 
+    new_reg_nu = cursor.fetchone()
+    new_reg_nu = new_reg_nu[0] + 1 # (largest reg_no currently + 1) will be unique
+
     new_reg = (new_reg_nu, new_plate, vin, new_owner_fname, new_owner_lname )
     cursor.execute("INSERT INTO registrations VALUES (?, date('now'), date('now','+1 year'),?,?,?,?) ;", (new_reg))
     cursor.execute("UPDATE registrations SET expiry = date('now') WHERE regno = ? AND fname = ? AND lname = ?;",(reg_info[0], reg_info[5], reg_info[6]))
-    print("Transfer completed sucessfully!")
+
+    input("Transfer completed sucessfully! Hit any button to return to the menu")
     connection.commit()
     return
 
@@ -600,53 +546,69 @@ def main():
     
     db_connection = False
     while not db_connection:
-        db_connection, path = connect_to_DB()
-        while db_connection:
-            os.system('clear')
-            print("Sucessfully connected to database: " + path + "\n")
-            user = get_login()
-            logout = False
-            while not logout:
-                os.system('clear')
-                print("Welcome " + user[3] + ".\n")
-                task = display_menu(user[2])
-                try:
-                    if task == 1:
-                        register_birth(user)
-                    elif task == 2:
-                        register_marriage(user)
-                    elif task == 3:
-                        renew_reg()
-                    elif task == 4:
-                        bill_of_sale()
-                    elif task == 5:
-                        process_payment()
-                    elif task == 6:
-                        get_driver_abstract()
-                    elif task == 7:
-                        issue_ticket()
-                    elif task == 8:
-                        find_car_owner()
-                    elif task == 0:
-                        logout = True
-                except(EOFError):
-                    print('\nReturning to menu...')
-                    time.sleep(1)
-                    continue
-                except:
-                    print('An error has occured... Disconnecting')
-                    time.sleep(1)
-                    dbconnection = False
-
+        try:
+            db_connection, path = connect_to_DB()
+        except EOFError:
+            print("\nExiting")
+            time.sleep(2)
+            exit()
         else:
-            try:
-                ans = input("Unable to connect to the specified database. Would you like to try again? (Y for yes, N to exit) ")
-                if ans == 'N':
-                    exit()
+            while db_connection:
+                os.system('clear')
+                print("Sucessfully connected to database: " + path + "\n")
+                try:
+                    user = get_login()
+                except EOFError:
+                    print('\nDisconnecting')
+                    db_connection = False
+                    time.sleep(2)
                 else:
-                    os.system('clear')
-            except:
-                exit()
+                    logout = False
+                    while not logout:
+                        os.system('clear')
+                        print("Welcome " + user[3] + ".\n")
+                        try:
+                            task = display_menu(user[2])
+                        except EOFError:
+                            print("Logging Out")
+                            logout = True
+                            time.sleep(2)
+                        else:
+                            try:
+                                if task == 1:
+                                    register_birth(user)
+                                elif task == 2:
+                                    register_marriage(user)
+                                elif task == 3:
+                                    renew_reg()
+                                elif task == 4:
+                                    bill_of_sale()
+                                elif task == 5:
+                                    process_payment()
+                                elif task == 6:
+                                    get_driver_abstract()
+                                elif task == 7:
+                                    issue_ticket()
+                                elif task == 8:
+                                    find_car_owner()
+                                elif task == 0:
+                                    logout = True
+                            except(EOFError):
+                                print('\nReturning to menu...')
+                                time.sleep(1)
+                            except:
+                                print('An error has occured... Returning to menu...')
+                                time.sleep(1)
+
+            else:
+                try:
+                    ans = input("Unable to connect to the specified database. Would you like to try again? (Y for yes, N to exit) ")
+                    if ans == 'N':
+                        exit()
+                    else:
+                        os.system('clear')
+                except:
+                    exit()
 
 
 
