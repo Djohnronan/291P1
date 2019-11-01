@@ -1,5 +1,7 @@
+
 \documentclass[10pt, a4paper]{article}
 \usepackage[a4paper, top=20mm, left=18mm, right=18mm, bottom=20mm]{geometry}
+
 \usepackage{hyperref}
 \usepackage[sf]{titlesec}
 \usepackage{listings}
@@ -21,6 +23,7 @@ Users with valid login credentials will be provided access to various functions 
 
 \subsection{User Guide}\label{UG}
 To launch the application, run the following command from the directory holding the source code:
+
 \begin{lstlisting}[language=Python]
 	$ python3 db.py
 \end{lstlisting}
@@ -29,6 +32,7 @@ To connect to a database, enter the path to the database when prompted (a):
 	Enter path of database: path/to/database.db
 \end{lstlisting}
 Once the database connection is successfuly established, the user will be prompted to enter their username and password (b), for example:
+
 \begin{lstlisting}[language=Python]		
 	Username: admin123
 	Password: pwd12345
@@ -38,6 +42,7 @@ Depending in the user type (agent or officer), numerical options will appear on 
 
 \subsection{Flow Diagram}
 \begin{center}
+
 \includegraphics[width=\textwidth]{Diagram1.pdf}
 \end{center}
 

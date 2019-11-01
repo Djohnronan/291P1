@@ -62,7 +62,7 @@ def display_menu(utype):
         while (not valid):
             try:
                 task = int(input("Enter a number: "))
-            except: # user did not enter a number
+            except ValueError: # user did not enter a number
                 print("Please enter a valid option")
             else:
                 if (task in range(0,7)): # check if user entered a valid menu option
@@ -79,7 +79,7 @@ def display_menu(utype):
         while (not valid):
             try:
                 task = int(input("Enter a number: "))
-            except: # user did not enter a number
+            except ValueError: # user did not enter a number
                 print("Please enter a valid option")
             else:
                 if (task in range(0,3)): # check if user entered a valid menu option
@@ -120,6 +120,7 @@ def register_birth(user_info):
                 valid = True 
         else:
             valid = True
+
 
     valid = False
     while not valid:
@@ -237,7 +238,7 @@ def bill_of_sale():
         while (not valid):
             try:
                 choice = int(input("\nEnter a number: "))
-            except: 
+            except ValueError: 
                 print("Please enter a valid option")
             else:
                 if(choice in range(1,4)):  
@@ -266,7 +267,7 @@ def bill_of_sale():
         while (not valid):
             try:
                 choice = int(input("\nEnter a number: "))
-            except: 
+            except ValueError: 
                 print("Please enter a valid option")
             else:
                 if(choice in range(1,4)):  
@@ -295,7 +296,7 @@ def bill_of_sale():
         while (not valid):
             try:
                 choice = int(input("\nEnter a number: "))
-            except: 
+            except ValueError: 
                 print("Please enter a valid option")
             else:
                 if(choice in range(1,4)):  
@@ -501,7 +502,63 @@ def issue_ticket():
     return
 
 def find_car_owner():
-    pass
+    os.system('clear')
+    make = input("enter Car's make : ")
+    model = input("enter Car's model : ")
+    year = input("enter Car's production year : ")
+    color = input ("enter Car's color  : ")
+    plate = input("enter Car's plate : ")
+
+    query = "SELECT DISTINCT r.fname, r.lname , v.make, v.model, v.year, v.color, r.plate, r.regdate, r.expiry From vehicles AS v, registrations AS r WHERE v.vin = r.vin "
+    data = []
+    if make != '':
+        query += "AND v.make LIKE ? "
+        data.append(make)
+    if model != '':
+        query += "AND v.model LIKE ? "
+        data.append(model)
+    if year != '':
+        query += "AND v.year LIKE ? "
+        data.append(int(year))
+    if color != '':
+        query += "AND v.color LIKE ? "
+        data.append(color)
+    if plate != '':
+        query += "AND v.plate LIKE ? "
+        data.append(plate)
+    query += 'AND r.regdate = (SELECT MAX(regdate) FROM registrations r2 WHERE r2.vin = r.vin);'
+
+    cursor.execute(query, data)
+    
+    car_data = [[str(item) for item in results] for results in cursor.fetchall()]
+    os.system('clear')
+
+    if len(car_data) > 3:
+        print("   {0:^10} {1:^13} {2:^4} {3:^8} {4:^7}".format("Make", "Model",  "Year", "Color",  "Plate"))
+        for i in range(0, len(car_data)):
+            print("{0:^2} {1:^10} {2:^13} {3:^4} {4:^8} {5:^7}".format(i+1, car_data[i][2], car_data[i][3], car_data[i][4], car_data[i][5], car_data[i][6]))
+        selection = None
+        while not selection:
+            try:
+                selection = int(input("Select Vehicle: "))
+                assert (selection in range(len(car_data)))
+            except AssertionError:
+                print("Please enter a valid option.")
+            except ValueError:
+                print("Please enter a valid option.")
+
+        os.system('clear')
+        print("{0:^10} {1:^13} {2:^4} {3:^8} {4:^7} {5:^10} {6:^10} {7:^10} {8:^10}".format("Make", "Model", "Year", "Color", "Plate", "Reg_Date", "Expiry", "Fname", "Lname"))
+        print("{0:^10} {1:^13} {2:^4} {3:^8} {4:^7} {5:^10} {6:^10} {7:^10} {8:^10}".format(car_data[selection-1][2], car_data[selection-1][3], car_data[selection-1][4], car_data[selection-1][5], car_data[selection-1][6], car_data[selection-1][7],car_data[selection-1][8], car_data[selection-1][0], car_data[selection-1][1]))
+
+    else:
+        print("{0:^10} {1:^13} {2:^4} {3:^8} {4:^7} {5:^10} {6:^10} {7:^10} {8:^10}".format("Make", "Model", "Year", "Color", "Plate", "Reg_Date", "Expiry", "Fname", "Lname"))
+        for car in car_data:
+            print("{0:^10} {1:^13} {2:^4} {3:^8} {4:^7} {5:^10} {6:^10} {7:^10} {8:^10}".format(car[2], car[3], car[4], car[5], car[6], car[7],car[8], car[0], car[1]))
+
+    
+    input("Press any button to return to menu")
+    return
 
 def insert_person(fname = None, lname = None):
     print("Registering a person")
@@ -590,13 +647,8 @@ def main():
                     os.system('clear')
             except:
                 exit()
-            else:
-                os.system('clear')
 
 
 
 if __name__ == "__main__":
     main()
-
-
-
