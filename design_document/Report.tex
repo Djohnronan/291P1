@@ -1,14 +1,16 @@
-
 \documentclass[10pt, a4paper]{article}
 \usepackage[a4paper, top=20mm, left=18mm, right=18mm, bottom=20mm]{geometry}
-
 \usepackage{hyperref}
 \usepackage[sf]{titlesec}
 \usepackage{listings}
 \usepackage{graphicx}
-
+\usepackage{float}
+\usepackage{color}
 \hypersetup{hidelinks = true}
-
+\definecolor{codegrey}{rgb}{0.95, 0.95, 0.96}
+\lstset{
+	backgroundcolor = \color{codegrey}
+}
 \begin{document}
 {\fontfamily{cmss}\selectfont
 
@@ -23,30 +25,32 @@ Users with valid login credentials will be provided access to various functions 
 
 \subsection{User Guide}\label{UG}
 To launch the application, run the following command from the directory holding the source code:
-
-\begin{lstlisting}[language=Python]
-	$ python3 db.py
+\begin{lstlisting}
+    $ python3 db.py
 \end{lstlisting}
 To connect to a database, enter the path to the database when prompted (a):
-\begin{lstlisting}[language=Python]
-	Enter path of database: path/to/database.db
+\begin{lstlisting}
+    Enter path of database: path/to/database.db
 \end{lstlisting}
 Once the database connection is successfuly established, the user will be prompted to enter their username and password (b), for example:
-
-\begin{lstlisting}[language=Python]		
-	Username: admin123
-	Password: pwd12345
+\begin{lstlisting}
+    Username: admin123
+    Password: pwd12345
 \end{lstlisting}
-Depending in the user type (agent or officer), numerical options will appear on screen. Enter the number of the task you wish to perform, and follow the on-screen instructions. For further information regarding the options, see \emph{\nameref{SD}}
+Depending in the user type (agent or officer), numerical options will appear on screen. Enter the number of the task you wish to perform, and follow the on-screen instructions. For further information regardin the options, see \emph{\nameref{SD}}. 
 
+At the main user menu, the user can logout by entering the `0' key, which will return the application to the login screen. The application will remain connected to the database entered at launch, and other useres are able to login from here.
 
-\subsection{Flow Diagram}
-\begin{center}
+The user can return to the main menu from any point within performing a task by hitting ctrl-d. Note: if a new entity was commited to the database or before hitting crtl-d, \textbf{this action will be saved in the database}, i.e. if a parent needs to be registered in order to register a birth, and this step is completed, and the user exits to the main menu before completeing the birth registration process, the newly registered parent will reain in the database. 
 
-\includegraphics[width=\textwidth]{Diagram1.pdf}
-\end{center}
+At the login in screen, the application can be exited by pressing crtl-d.
 
-\newpage
+\begin{figure}[H]
+\centering
+\includegraphics[height=8cm]{Diagram1.pdf}\label{fig}
+\caption{Diagram showing flow of data between application user, application functions, and the connceted database.}
+\end{figure}
+
 \section{Software Design}\label{SD}
 \begin{itemize}
 
@@ -74,11 +78,19 @@ Depending in the user type (agent or officer), numerical options will appear on 
 \end{itemize}
 
 \section{Testing Strategy}\label{TS}
-The testing strategy discusses your general strategy for testing, with the scenarios being tested, the coverage of your test cases and (if applicable) some statistics on the number of bugs found and the nature of those bugs. 
+Functions of the software were tested as they were developed, and then again when the entire development process was completed. For each of the functionalities, the follwoing cases were tested:
+\begin{itemize}
+\item{\emph{Register a birth}: Both parents in db; only one parent in db; no parents in db; mother with Null values}
+\item{\emph{Register a marriage}: partners not in db}
+\item{\emph{Renew a vehicle registration}: regno not found}
+\item{\emph{Process a bill of sale}: }
+\item{\emph{Process a payment}: invalid tno; invalid payment amount (i.e. over paying a ticket)}
+\item{\emph{Get a driver abstract}: driver not found in db}
+\item{\emph{Issue a ticket}: regno not found; violation date specified; violation date not specified }
+\item{\emph{Find a car owner}: }
+\end{itemize}
 
 \section{Group Break-down Strategy}\label{GS}
 The group work strategy must list the break-down of the work items among partners, both the time spent (an estimate) and the progress made by each partner, and your method of coordination to keep the project on track. The design document should also include a documentation of any decision you have made which is not in the project specification or any coding you have done beyond or different from what is required.
 
 \end{document}
-
- 
