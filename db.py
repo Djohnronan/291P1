@@ -177,7 +177,7 @@ def register_marriage(user_info):
 
     valid = False
     while not valid:
-        p2_fname = input("Parnter 2 First name: ")
+        p2_fname = input("Partner 2 First name: ")
         p2_lname = input("Partner 2 Last name: ")
         cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE ?;", (p2_fname, p2_lname))
         p2_info = cursor.fetchone()
