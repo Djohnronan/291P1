@@ -560,6 +560,7 @@ def main():
                     user = get_login()
                 except EOFError:
                     print('\nDisconnecting')
+                    connection.close()
                     db_connection = False
                     time.sleep(2)
                 else:
