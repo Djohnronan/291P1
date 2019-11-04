@@ -163,8 +163,8 @@ def register_marriage(user_info):
     regno += 1
     valid = False
     while not valid:
-        p1_fname = input("p1 First name: ")
-        p1_lname = input("p1 Last name: ")
+        p1_fname = input("Partner 1 First name: ")
+        p1_lname = input("Partner 1 Last name: ")
         cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE ?;", (p1_fname, p1_lname))
         p1_info = cursor.fetchone()
         if p1_info == None:
@@ -177,8 +177,8 @@ def register_marriage(user_info):
 
     valid = False
     while not valid:
-        p2_fname = input("p2 First name: ")
-        p2_lname = input("p2 Last name: ")
+        p2_fname = input("Parnter 2 First name: ")
+        p2_lname = input("Partner 2 Last name: ")
         cursor.execute("SELECT * FROM persons WHERE fname LIKE ? AND lname LIKE ?;", (p2_fname, p2_lname))
         p2_info = cursor.fetchone()
         if p2_info == None:
