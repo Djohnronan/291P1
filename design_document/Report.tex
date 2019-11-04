@@ -60,7 +60,7 @@ At the login in screen, the application can be exited by pressing crtl-d.
 
 \item Register a person [\texttt{insert\_person(fname, lname)}]
 	\begin{quotation}
-	\noindent Registers a new person into \emph{persons} table. If \texttt{fname, lname} are not provided as arguments, user can enter this information. Otherwise, names provided as aguments will be used. 
+	\noindent Registers a new person into \emph{persons} table. If \texttt{fname, lname} are not provided as arguments, user can enter this information. Otherwise, names provided as arguments will be used. 
 	\end{quotation}
 	
 \item Register a birth [\texttt{register\_birth(user\_info)}]
@@ -100,7 +100,7 @@ At the login in screen, the application can be exited by pressing crtl-d.
 \newpage
 \item Find a car owner [\texttt{find\_car\_owner()}]
 	\begin{quotation}
-	\noindent Prompts user to optionally enter the make, model, year, color and plate of a vehicle. Matching vehicles are found and displayed with their make, model, year, color and plate. The user may choose a vehicle to view the registration date, expiry date and the name of the owner. Alternatively, if there are less than 3 matches the additional information is displayed automatically.
+	\noindent Prompts user to optionally enter the make, model, year, colour and plate of a vehicle. Matching vehicles are found and displayed with their make, model, year, colour and plate. The user may choose a vehicle to view the registration date, expiry date and the name of the owner. Alternatively, if there are less than 3 matches the additional information is displayed automatically.
 	\end{quotation}
 
 \end{itemize}
@@ -119,6 +119,71 @@ Functions of the software were tested as they were developed, and then again whe
 \end{itemize}
 
 \section{Group Break-down Strategy}\label{GS}
-The group work strategy must list the break-down of the work items among partners, both the time spent (an estimate) and the progress made by each partner, and your method of coordination to keep the project on track. The design document should also include a documentation of any decision you have made which is not in the project specification or any coding you have done beyond or different from what is required.
+The project was developed using github to track progress and coordinate work on implementing the features outlined in the spec. A detailed breakdown of the group work on functions and features follows: 
+	
+	\begin{itemize}
+	\item main, database connection, user login, main menu [\texttt{main()/connect\_to\_DB()/get\_login()/display\_menu(utype)}]
+		\begin{itemize}
+		\item Dalton \& Harrison: collaborative, 1.5 hrs
+		\end{itemize}
+		
+	\item SQL injection prevention and non-visible password
+		\begin{itemize}
+		\item Harrison \& Dalton: collaborative, 0.5 hrs
+		\end{itemize}
+	
+	\item Register a birth [\texttt{register\_birth(user\_info)/insert\_person()}]
+		\begin{itemize}
+		\item Harrison \& Dalton: collaborative, 1 hrs
+		\end{itemize}
+	
+	\item Register a marriage [\texttt{register\_marriage(user\_info)}]
+		\begin{itemize}
+		\item Harrison \& Dalton: collaborative, 0.5 hrs
+		\end{itemize}
+
+	\item Renew a vehicle registration [\texttt{renew\_reg()}]
+		\begin{itemize}
+		\item Harrison \& Dalton: collaborative, 0.5 hrs
+		\end{itemize}
+		
+	\item Bill of sale [\texttt{bill\_of\_sale()}]
+		\begin{itemize}
+		\item Amir: 2 hrs
+		\item Harrison: format changes, 0.5 hours
+		\end{itemize}
+		
+	\item Process a payment [\texttt{process\_payment()}]
+		\begin{itemize}
+		\item Harrison \& Dalton \& Amir: collaborative, 1 hrs
+		\end{itemize}
+		
+	\item Get a driver abstract [\texttt{get\_driver\_abstract()/ticket\_report()}]
+		\begin{itemize}
+		\item Dalton: 3 hrs
+		\end{itemize}
+		
+	\item Issue a ticket [\texttt{issue\_ticket()}]
+		\begin{itemize}
+		\item Harrison \& Dalton \& Amir: collaborative, 1 hrs
+		\end{itemize}
+		
+	\item Find a car owner [\texttt{find\_car\_owner()}]
+		\begin{itemize}
+		\item Amir: 8 hours
+		\item Harrison \& Dalton \& Amir: collaborative, 1.5 hrs
+		\end{itemize}
+	
+	\item ctrl-d escape
+		\begin{itemize}
+		\item Harrison: 1 hrs
+		\end{itemize}	
+	
+	\item Design Document
+		\begin{itemize}
+		\item Dalton: format, flow diagram, overview, user guide, 3 hrs
+		\item Harrison \& Dalton \& Amir: collaborative, 1.5 hrs
+		\end{itemize}
+	\end{itemize}
 
 \end{document}
