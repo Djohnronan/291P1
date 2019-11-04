@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  3 NOV 2019 22:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  4 NOV 2019 02:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -378,19 +378,19 @@ te ignored
                                                   \fi \fi 
 l.57 	\begin{quotation}
                         <./Diagram1.pdf>] [2]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 109.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 124.
  [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 109.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 124.
  (./Report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 109.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 109.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 124.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 124.
 Package rerunfilecheck Info: File `Report.out' has not changed.
 (rerunfilecheck)             Checksum: 66BFB5738FB693C5B461D6918BE550E5;263.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 109.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 124.
  )
 (\end occurred inside a group at level 1)
 
@@ -399,7 +399,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 109.
 Here is how much of TeX's memory you used:
  7036 strings out of 492982
  103685 string characters out of 6134895
- 201577 words of memory out of 5000000
+ 200577 words of memory out of 5000000
  10537 multiletter control sequences out of 15000+600000
  8419 words of font info for 30 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -412,7 +412,7 @@ re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Report.pdf (3 pages, 295831 bytes).
+Output written on Report.pdf (3 pages, 297838 bytes).
 PDF statistics:
  98 PDF objects out of 1000 (max. 8388607)
  81 compressed objects within 1 object stream
